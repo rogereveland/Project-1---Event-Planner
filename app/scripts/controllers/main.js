@@ -35,6 +35,9 @@ angular.module('eventPlannerApp')
     var userCheck = localStorage.getItem('userInfo');
     if(userCheck !== null){
         $scope.person = JSON.parse(userCheck);
+        angular.element('#eventName').focus();
+    } else{
+      angular.element('#firstName').focus();
     }
 
     $scope.processForm = function(){
@@ -136,6 +139,7 @@ angular.module('eventPlannerApp')
     $scope.logout = function(){
       $scope.person = {};
       $scope.person.userid = 0;
+      angular.element('#firstName').focus();
 
     };
     $scope.loadEvents();
