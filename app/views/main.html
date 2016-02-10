@@ -1,0 +1,296 @@
+<!-- Contact Info -->
+<div class="row">
+  <div class="col-lg-12">
+    <button class="btn btn-danger" ng-click="resetLocalStorage();">Reset Local Storage</button>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12 col-md-10 col-md-offset-1">
+    <div class="panel panel-primary">
+      <div class="panel-heading text-center">
+        <h3>Contact Information</h3>
+      </div>
+      <div class="panel-body" id="signupFormBody" ng-show="person.userid == 0">
+        <div class="alert alert-warning">
+          Before you can create an event you need an account! Please fill out the fields below.
+        </div>
+        <form class="form-horizontal" novalidate="" ng-submit="processForm()" name="userForm">
+          <div class="form-group" ng-class="{'has-error' : userForm.firstName.$invalid && userForm.firstName.$touched}">
+            <label for="firstName" class="col-sm-3">First Name</label>
+            <div class="col-sm-9">
+              <input required type="text" name="firstName" id="firstName" class="form-control"
+                ng-model="person.firstName" placeholder="Enter your first name" autocomplete="given-name" aria-describedby="firstNameHelp" />
+                <div ng-show="userForm.$submitted || userForm.firstName.$touched">
+                  <p class="help-block" id="firstNameHelp" ng-show="userForm.firstName.$error.required">Please enter your first name</p>
+                </div>
+            </div>
+          </div>
+          <div class="form-group" ng-class="{'has-error' : userForm.lastName.$invalid && userForm.lastName.$touched}">
+            <label for="lastName" class="col-sm-3">Last Name</label>
+            <div class="col-sm-9">
+              <input required type="text" name="lastName" id="lastName" class="form-control"
+                ng-model="person.lastName" placeholder="Enter your last name" autocomplete="family-name" aria-describedby="lastNameHelp" />
+                <div id="lastNameHelp" ng-show="userForm.$submitted || userForm.lastName.$touched">
+                  <p class="help-block" ng-show="userForm.lastName.$error.required">Please enter your last name</p>
+                </div>
+            </div>
+          </div>
+          <div class="form-group" ng-class="{'has-error' : userForm.email.$invalid && userForm.email.$touched}">
+            <label for="email" class="col-sm-3">Email</label>
+            <div class="col-sm-9">
+              <input required type="email" name="email" id="email" class="form-control"
+                ng-model="person.email" placeholder="Enter a valid email address" autocomplete="email" aria-describedby="emailHelp" />
+                <div ng-show="userForm.$submitted || userForm.email.$touched">
+                  <p class="help-block" id="emailHelp">
+                    <span ng-show="userForm.email.$error.required">Please enter an email address</span>
+                    <span ng-show="userForm.email.$error.email">That is not a valid email address</span>
+                  </p>
+                </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="password" class="col-sm-3">Create a Password</label>
+            <div class="col-sm-4">
+              <input type="password" name="password" id="password" class="form-control"
+                ng-model="person.password" placeholder="Enter a password here" aria-describedby="passwordHelp" ng-change="checkPassword()" />
+            </div>
+            <div class="col-sm-4">
+              <label class="sr-only" for="passwordConfirm">Confirm Password</label>
+              <input type="password" name="passwordConfirm" id="passwordConfirm" class="form-control"
+                ng-model="person.passwordConfirm" placeholder="Confirm your password" ng-change="checkPassword()" />
+                <p class="help-block" id="passwordHelp">
+                    Your password must follow these rules:
+                    <ul id="passwordReqsList">
+                      <li id="pw_chars" ng-class="{'text-success': lengthValid,'text-danger':!lengthValid}">
+                        Be at least 8 characters long
+                      </li>
+                      <li id="pw_uppers" ng-class="{'text-success': uppersValid,'text-danger':!uppersValid}">
+                        Contain at least one upper-case letter
+                      </li>
+                      <li id="pw_downers" ng-class="{'text-success': downersValid,'text-danger':!downersValid}">
+                        Contain at least one lower-case letter
+                      </li>
+                      <li id="pw_numbers" ng-class="{'text-success': numbersValid,'text-danger':!numbersValid}">
+                        Contain at least one number
+                      </li>
+                      <li id="pw_match" ng-class="{'text-success': matchValid,'text-danger':!matchValid}">
+                        Must match each other
+                      </li>
+                    </ul>
+                </p>
+            </div>
+          </div>
+          <hr />
+          <h4>Optional Information <small>These fields aren't necessary and used for usage and statistics purposes only!</small></h4>
+          <div class="form-group">
+            <label for="employer" class="col-sm-3">Employer</label>
+            <div class="col-sm-9">
+              <input type="text" name="employer" id="employer" class="form-control"
+                ng-model="person.employer" placeholder="Employer's Name" autocomplete="organization" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="jobTitle" class="col-sm-3">Job Title</label>
+            <div class="col-sm-9">
+              <input type="text" name="jobTitle" id="jobTitle" class="form-control"
+                ng-model="person.jobTitle" placeholder="Your Job Title" autocomplete="organization-title" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="birthdate" class="col-sm-3">Birthdate</label>
+            <div class="col-sm-9">
+              <input type="date" name="birthdate" id="birthdate" class="form-control"
+                ng-model="person.birthdate" placeholder="Your Date of Birth" autocomplete="bday" />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+              <button type="submit" class="btn btn-lg btn-success" ng-disabled="!validForm(userForm.$valid);">Create Account</button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div class="panel-body" ng-show="person.userid != 0">
+        Thank you for signing up {{person.firstName}} {{person.lastName}}! <small>Not you? <a href="javascript:void(0);" ng-click="logout();">Click Here to logout</a></small>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Contact Info -->
+<div class="row" ng-show="person.userid != 0">
+  <div class="col-sm-12 col-md-10 col-md-offset-1">
+    <div class="panel panel-info">
+      <div class="panel-heading text-center">
+        <h3>Event Information</h3>
+      </div>
+      <div class="panel-body">
+        <form class="form-horizontal" name="eventForm" ng-submit="addEvent();">
+          <div class="form-group" ng-class="{'has-error' : eventForm.eventName.$invalid && eventForm.eventName.$touched}">
+            <label for="eventName" class="col-sm-3">Event Name</label>
+            <div class="col-sm-9">
+              <input required type="text" name="eventName" id="eventName" class="form-control"
+                ng-model="eventDetails.eventName" placeholder="Enter a short name for your event" autocomplete="given-name" aria-describedby="eventNameHelp" />
+                <div ng-show="eventForm.$submitted || eventForm.eventName.$touched">
+                  <p class="help-block" id="eventNameHelp" ng-show="eventForm.eventName.$error.required">Please enter a name for the event</p>
+                </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="eventType" class="col-sm-3">Event Type</label>
+            <div class="col-sm-9">
+              <select name="eventType" id="eventType" class="form-control" ng-model="eventDetails.eventType">
+                <option value="Birthday Party">
+                  Birthday Party
+                </option>
+                <option value="Conference">
+                  Conference
+                </option>
+                <option value="Meeting">
+                  Meeting
+                </option>
+                <option value="Other">
+                  Other
+                </option>
+              </select>
+              <div ng-show="eventDetails.eventType=='Other'">
+                <input type="text" class="form-control" placeholder="Describe your event type" ng-model="eventDetails.eventOther" />
+              </div>
+            </div>
+          </div>
+          <div class="form-group" ng-class="{'has-error' : eventForm.eventHost.$invalid && eventForm.eventHost.$touched}">
+            <label for="eventHost" class="col-sm-3">Event Host</label>
+            <div class="col-sm-9">
+              <input required type="text" name="eventHost" id="eventHost" class="form-control" ng-model="eventDetails.eventHost"
+                placeholder="Enter the name of the person or company to contact" aria-describedby="eventHostHelp" />
+              <div ng-show="eventForm.$submitted || eventForm.eventHost.$touched">
+                <p class="help-block" id="eventHostHelp" ng-show="eventForm.eventName.$error.required">
+                  Please enter the name of the host
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group" ng-class="{'has-error' : eventForm.eventLocation.$invalid && eventForm.eventLocation.$touched}">
+            <label for="eventLocation" class="col-sm-3">Event Location</label>
+            <div class="col-sm-9">
+              <input required type="text" name="eventLocation" id="eventLocation" class="form-control" ng-model="eventDetails.eventLocation"
+                placeholder="Location of the event" aria-describedby="eventLocationHelp" />
+                <div ng-show="eventForm.$submitted || eventForm.eventLocation.$touched">
+                  <p class="help-block" id="eventLocationHelp" ng-show="eventForm.eventLocation.$error.required">
+                    Please enter the location of the event
+                  </p>
+                </div>
+            </div>
+          </div>
+
+          <div class="form-group" ng-class="{'has-error' : eventForm.eventStart.$invalid && eventForm.eventStart.$touched}">
+            <label for="eventStart" class="col-sm-3">Start Date</label>
+            <div class="col-sm-4">
+              <input required type="text" name="eventStart" id="eventStart" class="form-control" ng-model="eventDetails.eventStart"
+                placeholder="Starting Date" aria-describedby="eventStartHelp" />
+                <div ng-show="eventForm.$submitted || eventForm.eventStart.$touched">
+                  <p class="help-block" id="eventStartHelp">
+                    <span ng-show="eventForm.eventStart.$error.required">Please enter the starting date and time of the event</span>
+                    <span ng-show="eventForm.eventStart.$error.date">That is not a valid date!</span>
+                  </p>
+                </div>
+            </div>
+          </div>
+          <div class="form-group" ng-class="{'has-error' : eventForm.eventEnd.$invalid && eventForm.eventEnd.$touched}">
+            <label for="eventEnd" class="col-sm-3">End Date</label>
+            <div class="col-sm-4">
+              <input required type="text" name="eventEnd" id="eventEnd" class="form-control" ng-model="eventDetails.eventEnd"
+                placeholder="Ending Date" aria-describedby="eventEndHelp" />
+                <div ng-show="eventForm.$submitted || eventForm.eventEnd.$touched">
+                  <p class="help-block" id="eventEndHelp">
+                    <span ng-show="eventForm.eventEnd.$error.required">Please enter the ending date and time of the event</span>
+                    <span ng-show="eventForm.eventEnd.$error.date">That is not a valid date!</span>
+                  </p>
+                </div>
+            </div>
+          </div>
+          <div class="form-group" ng-class="{'has-error' : eventForm.eventGuests.$invalid && eventForm.eventGuests.$touched}">
+            <label for="eventGuests" class="col-sm-3">Guest List</label>
+            <div class="col-sm-9">
+              <textarea required name="eventGuests" id="eventGuests"
+                placeholder="Enter a comma delimeted list of email addresses, or one email address per line." class="form-control"
+                ng-model="eventDetails.eventGuests" aria-describedby="eventGuestsHelp"></textarea>
+                <div ng-show="eventForm.$submitted || eventForm.eventGuests.$touched">
+                  <p class="help-block" id="eventGuestsHelp" ng-show="eventForm.eventGuests.$error.required">
+                    Please enter the email addresses of some invitees.
+                  </p>
+                </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="eventMessage" class="col-sm-3">Message</label>
+            <div class="col-sm-9">
+              <textarea name="eventMessage" id="eventMessage" placeholder="Enter an optional message to include in the invitation email." class="form-control" ng-model="eventDetails.eventMessage"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+              <button type="submit" class="btn btn-lg btn-success" ng-disabled="!eventForm.$valid">Create Event</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Event Info -->
+<div class="row">
+  <div class="col-sm-12 col-md-10 col-md-offset-1">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h3>Events</h3>
+      </div>
+      <div class="panel-body">
+        <div ng-repeat="e in events track by e.eventID">
+          <h4>{{e.eventName}} <small>{{e.eventStart | date:'M/d/yy h:mm a'}} - {{e.eventEnd | date:'M/d/yy h:mm a'}}</small></h4>
+          <p>
+            <table class="table table-bordered">
+              <tr>
+                <td>
+                  <strong>Event Creator</strong>
+                </td>
+                <td>
+                  {{e.eventCreator.firstName}} {{e.eventCreator.lastName}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Type</strong>
+                </td>
+                <td>
+                  {{e.eventType}} <span ng-show="e.eventType == 'Other'">: <em>{{e.eventOther}}</em></span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Host</strong>
+                </td>
+                <td>
+                  {{e.eventHost}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Location</strong>
+                </td>
+                <td>
+                  {{e.eventLocation}}
+                </td>
+              </tr>
+            </table>
+          </p>
+          <hr />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  jQuery('#eventStart, #eventEnd').datetimepicker();
+</script>
